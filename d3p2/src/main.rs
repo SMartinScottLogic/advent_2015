@@ -1,5 +1,5 @@
 use anyhow::Result;
-use d1p2::load;
+use d3p2::load;
 use env_logger::Env;
 use log::{error, info};
 use yansi::Paint;
@@ -7,7 +7,7 @@ use yansi::Paint;
 fn main() -> Result<()> {
     env_logger::Builder::from_env(Env::default().default_filter_or("info")).init();
 
-    let mut solution = load("input/day1.input")?;
+    let mut solution = load("input/day3.input")?;
     info!(
         "{}{}: {:?}",
         Paint::masked("🎄 "),

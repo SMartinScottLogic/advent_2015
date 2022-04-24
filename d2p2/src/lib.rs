@@ -52,10 +52,15 @@ impl FromStr for Present {
 }
 
 impl Present {
-    fn required(&self) -> i64 {
+    fn required_paper(&self) -> i64 {
         let actual_need = 2 * self.l * self.w + 2 * self.w * self.h + 2 * self.h * self.l;
         let smallest = min(min(self.l * self.w, self.w * self.h), self.h * self.l);
         (actual_need + smallest).into()
+    }
+    fn required_ribbon(&self) -> i64 {
+        let wrap = 2 * min(min(self.l + self.w, self.w + self.h), self.h + self.l) as i64;
+        let bow = (self.l * self.w * self.h) as i64;
+        wrap + bow
     }
 }
 
@@ -69,7 +74,7 @@ impl Solution {
     }
 
     pub fn analyse(&mut self) {
-        let total = self.presents.iter().map(|p| p.required()).sum();
+        let total = self.presents.iter().map(|p| p.required_ribbon()).sum();
         self.answer = Some(total);
     }
 
@@ -95,10 +100,19 @@ mod tests {
     );
 
     #[test]
-    fn known_results() -> Result<()> {
+    fn known_paper() -> Result<()> {
         let m = map![Present::from_str("2x3x4")? => 58, Present::from_str("1x1x10")? => 43];
         for (input, expected) in m {
-            assert_eq!(expected, input.required());
+            assert_eq!(expected, input.required_paper());
+        }
+        Ok(())
+    }
+
+    #[test]
+    fn known_ribbon() -> Result<()> {
+        let m = map![Present::from_str("2x3x4")? => 34, Present::from_str("1x1x10")? => 14];
+        for (input, expected) in m {
+            assert_eq!(expected, input.required_ribbon());
         }
         Ok(())
     }
