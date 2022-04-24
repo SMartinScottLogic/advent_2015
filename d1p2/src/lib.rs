@@ -51,7 +51,7 @@ impl Solution {
             log::debug!("{pos}: {floor}");
             if floor == -1 {
                 self.answer = Some(1 + (pos as i64));
-                return
+                return;
             }
         }
         self.answer = None;

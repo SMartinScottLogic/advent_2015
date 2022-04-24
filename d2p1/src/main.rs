@@ -1,5 +1,5 @@
-use d2p1::load;
 use anyhow::Result;
+use d2p1::load;
 use env_logger::Env;
 use log::{error, info};
 use yansi::Paint;
