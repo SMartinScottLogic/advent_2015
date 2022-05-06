@@ -1,9 +1,8 @@
 use anyhow::{Error, Result};
 use std::{
-    collections::HashMap,
     fs::File,
     io::{BufRead, BufReader},
-    str::FromStr,
+    str::FromStr, collections::HashMap,
 };
 
 pub fn load(filename: &str) -> Result<Solution> {
@@ -70,14 +69,12 @@ impl Solution {
 #[derive(Debug, PartialEq)]
 enum Judgement1 {
     Nice,
-    Naughty,
+    Naughty
 }
 
 impl Judgement1 {
     fn count_vowels(s: &str) -> usize {
-        s.chars()
-            .filter(|c| *c == 'a' || *c == 'e' || *c == 'i' || *c == 'o' || *c == 'u')
-            .count()
+        s.chars().filter(|c| *c=='a' || *c=='e' || *c=='i' || *c=='o' || *c=='u').count()
     }
 
     fn contains_naughty_part(s: &str) -> bool {
@@ -89,7 +86,7 @@ impl Judgement1 {
         for c in s.chars() {
             last = match last {
                 Some(last_c) if c == last_c => return true,
-                _ => Some(c),
+                _ => Some(c)
             }
         }
         false
@@ -112,10 +109,11 @@ impl FromStr for Judgement1 {
     }
 }
 
+
 #[derive(Debug, PartialEq)]
 enum Judgement2 {
     Nice,
-    Naughty,
+    Naughty
 }
 
 impl Judgement2 {
