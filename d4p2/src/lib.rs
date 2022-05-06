@@ -74,4 +74,3 @@ impl From<char> for Direction {
         }
     }
 }
-
