@@ -67,7 +67,9 @@ impl Solution {
                     match i.mode {
                         Mode::On => lights.insert((x, y), 1),
                         Mode::Off => lights.insert((x, y), 0),
-                        Mode::Toggle => lights.insert((x, y), lights.get(&(x, y)).unwrap_or(&0) ^ 1)
+                        Mode::Toggle => {
+                            lights.insert((x, y), lights.get(&(x, y)).unwrap_or(&0) ^ 1)
+                        }
                     };
                 }
             }
@@ -109,12 +111,14 @@ struct Instruction {
     sx: u32,
     sy: u32,
     ex: u32,
-    ey: u32
+    ey: u32,
 }
 
 #[derive(Debug)]
 enum Mode {
-    On,Off,Toggle
+    On,
+    Off,
+    Toggle,
 }
 
 impl FromStr for Instruction {
@@ -128,7 +132,13 @@ impl FromStr for Instruction {
         let sy = cap.name("sy").unwrap().as_str().parse().unwrap();
         let ex = cap.name("ex").unwrap().as_str().parse().unwrap();
         let ey = cap.name("ey").unwrap().as_str().parse().unwrap();
-        Ok(Self { mode, sx, sy, ex, ey })
+        Ok(Self {
+            mode,
+            sx,
+            sy,
+            ex,
+            ey,
+        })
     }
 }
 
@@ -140,7 +150,7 @@ impl FromStr for Mode {
             "turn on" => Self::On,
             "toggle" => Self::Toggle,
             "turn off" => Self::Off,
-            _ => unreachable!()
+            _ => unreachable!(),
         };
         Ok(m)
     }
@@ -152,33 +162,8 @@ mod tests {
     use utils::map;
 
     #[test]
-    fn known_results_part1() -> Result<()> {
-        let m = map![
-        "ugknbfddgicrmopn" => Judgement1::Nice,
-        "aaa" => Judgement1::Nice,
-        "jchzalrnumimnmhp" => Judgement1::Naughty,
-        "haegwjzuvuyypxyu" => Judgement1::Naughty,
-        "dvszwmarrgswjxmb" => Judgement1::Naughty
-            ];
-
-        for (input, expected) in m {
-            assert_eq!(Judgement1::from_str(input).unwrap(), expected);
-        }
-        Ok(())
-    }
-
-    #[test]
-    fn known_results_part2() -> Result<()> {
-        let m = map![
-        "qjhvhtzxzqqjkmpb" => Judgement2::Nice,
-        "xxyxx" => Judgement2::Nice,
-        "uurcxstgmygtbstg" => Judgement2::Naughty,
-        "ieodomkazucvgmuy" => Judgement2::Naughty
-            ];
-
-        for (input, expected) in m {
-            assert_eq!(Judgement2::from_str(input).unwrap(), expected);
-        }
+    fn noop() -> Result<()> {
+        assert_eq!(1 + 1, 2);
         Ok(())
     }
 }
