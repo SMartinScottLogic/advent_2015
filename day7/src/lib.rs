@@ -222,7 +222,6 @@ impl FromStr for Signal {
 #[cfg(test)]
 mod tests {
     use crate::*;
-    use utils::map;
 
     #[test]
     fn parsing() -> Result<()> {
