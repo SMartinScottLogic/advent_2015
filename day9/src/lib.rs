@@ -1,6 +1,5 @@
-use anyhow::{Error, Result};
+use anyhow::Result;
 use std::{
-    collections::HashMap,
     collections::HashSet,
     fs::File,
     io::{BufRead, BufReader},
@@ -73,10 +72,12 @@ impl Solution {
         for location in &locations {
             let mut visited = HashSet::new();
             visited.insert(location.to_string());
-            let cost = self.analyse_part1_r(location, &locations, &mut visited).unwrap();
+            let cost = self
+                .analyse_part1_r(location, &locations, &mut visited)
+                .unwrap();
             min_cost = match min_cost {
                 None => Some(cost),
-                Some(v) => Some(std::cmp::min(v, cost))
+                Some(v) => Some(std::cmp::min(v, cost)),
             };
             println!("{location} {cost:?}");
         }
@@ -95,50 +96,70 @@ impl Solution {
         for location in &locations {
             let mut visited = HashSet::new();
             visited.insert(location.to_string());
-            let cost = self.analyse_part2_r(location, &locations, &mut visited).unwrap();
+            let cost = self
+                .analyse_part2_r(location, &locations, &mut visited)
+                .unwrap();
             max_cost = match max_cost {
                 None => Some(cost),
-                Some(v) => Some(std::cmp::max(v, cost))
+                Some(v) => Some(std::cmp::max(v, cost)),
             };
             println!("{location} {cost:?}");
         }
         max_cost
     }
 
-    fn analyse_part1_r(&self, cur_location: &str, locations: &HashSet<&str>, visited: &mut HashSet<String>) -> Option<i64> {
+    fn analyse_part1_r(
+        &self,
+        cur_location: &str,
+        locations: &HashSet<&str>,
+        visited: &mut HashSet<String>,
+    ) -> Option<i64> {
         let mut min_cost = None;
         for location in locations {
             if visited.contains(&location.to_string()) {
                 continue;
             }
-            if let Some(path) = self.paths.iter().find(|p| p.a==cur_location && p.b == *location) {
+            if let Some(path) = self
+                .paths
+                .iter()
+                .find(|p| p.a == cur_location && p.b == *location)
+            {
                 visited.insert(location.to_string());
                 let inner_cost = self.analyse_part1_r(location, locations, visited);
                 visited.remove(&location.to_string());
                 let this_cost = inner_cost.unwrap_or(0) + path.distance;
                 min_cost = match min_cost {
                     None => Some(this_cost),
-                    Some(v) => Some(std::cmp::min(v, this_cost))
+                    Some(v) => Some(std::cmp::min(v, this_cost)),
                 };
             }
         }
         min_cost
     }
 
-    fn analyse_part2_r(&self, cur_location: &str, locations: &HashSet<&str>, visited: &mut HashSet<String>) -> Option<i64> {
+    fn analyse_part2_r(
+        &self,
+        cur_location: &str,
+        locations: &HashSet<&str>,
+        visited: &mut HashSet<String>,
+    ) -> Option<i64> {
         let mut max_cost = None;
         for location in locations {
             if visited.contains(&location.to_string()) {
                 continue;
             }
-            if let Some(path) = self.paths.iter().find(|p| p.a==cur_location && p.b == *location) {
+            if let Some(path) = self
+                .paths
+                .iter()
+                .find(|p| p.a == cur_location && p.b == *location)
+            {
                 visited.insert(location.to_string());
                 let inner_cost = self.analyse_part2_r(location, locations, visited);
                 visited.remove(&location.to_string());
                 let this_cost = inner_cost.unwrap_or(0) + path.distance;
                 max_cost = match max_cost {
                     None => Some(this_cost),
-                    Some(v) => Some(std::cmp::max(v, this_cost))
+                    Some(v) => Some(std::cmp::max(v, this_cost)),
                 };
             }
         }
@@ -150,7 +171,7 @@ impl Solution {
 struct Path {
     a: String,
     b: String,
-    distance: i64
+    distance: i64,
 }
 
 impl PartialEq for Path {
@@ -161,7 +182,11 @@ impl PartialEq for Path {
 
 impl Path {
     fn reverse(&self) -> Self {
-        Self { a: self.b.clone(), b: self.a.clone(), distance: self.distance }
+        Self {
+            a: self.b.clone(),
+            b: self.a.clone(),
+            distance: self.distance,
+        }
     }
 }
 
@@ -169,7 +194,10 @@ impl FromStr for Path {
     type Err = std::convert::Infallible;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let r = regex::Regex::new(r"^(?P<a>[0-9a-zA-Z]+) to (?P<b>[0-9a-zA-Z]+) = (?P<distance>[0-9]+)$").unwrap();
+        let r = regex::Regex::new(
+            r"^(?P<a>[0-9a-zA-Z]+) to (?P<b>[0-9a-zA-Z]+) = (?P<distance>[0-9]+)$",
+        )
+        .unwrap();
         if let Some(cap) = r.captures(s) {
             let a = cap.name("a").unwrap().as_str().to_owned();
             let b = cap.name("b").unwrap().as_str().to_owned();
@@ -179,31 +207,5 @@ impl FromStr for Path {
             println!("{s} failed to match");
             panic!()
         }
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use crate::*;
-    use utils::map;
-
-    #[test]
-    fn parsing() -> Result<()> {
-        /*
-        let tests = vec![
-            "123 -> x",
-            "456 -> y",
-            "x AND y -> d",
-            "x OR y -> e",
-            "x LSHIFT 2 -> f",
-            "y RSHIFT 2 -> g",
-            "NOT x -> h",
-            "NOT y -> i",
-        ];
-        for test in tests {
-            Signal::from_str(test).unwrap();
-        }
-        */
-        Ok(())
     }
 }

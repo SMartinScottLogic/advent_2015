@@ -159,7 +159,6 @@ impl FromStr for Mode {
 #[cfg(test)]
 mod tests {
     use crate::*;
-    use utils::map;
 
     #[test]
     fn noop() -> Result<()> {

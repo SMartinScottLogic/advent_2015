@@ -1,7 +1,5 @@
-use anyhow::{Error, Result};
-use nom::{IResult, sequence::tuple, combinator::eof, character::complete::char};
+use anyhow::Result;
 use std::{
-    collections::HashMap,
     fs::File,
     io::{BufRead, BufReader},
     str::FromStr,
@@ -90,14 +88,14 @@ struct Entry {
 
 impl Entry {
     fn encode(s: &str) -> String {
-        let o: String = 
-        s.chars()
-        .map(|c| match c {
-            '"' => r#"\""#.to_string(),
-            '\\' => r#"\\"#.to_string(),
-            _ => format!("{c}")
-        })
-        .collect();
+        let o: String = s
+            .chars()
+            .map(|c| match c {
+                '"' => r#"\""#.to_string(),
+                '\\' => r#"\\"#.to_string(),
+                _ => format!("{c}"),
+            })
+            .collect();
         format!("\"{o}\"")
     }
 
@@ -109,15 +107,44 @@ impl Entry {
         let mut hex_remaining = 0;
         for c in s.chars() {
             memory += match c {
-                '"' if !in_string => { in_string = true; 0},
-                '"' if escape => { escape = false; 1 },
-                '"' if in_string => { in_string = false; 0},
-                _ if !in_string => {unreachable!()},
-                '\\' if escape => { escape = false; 1 }
-                '\\' => { escape = true; 0 }
-                'x' if escape => { in_hex = true; hex_remaining = 2; 0},
-                '0'..='9' | 'a'..='f' | 'A'..='F' if escape && in_hex && hex_remaining > 1 => { hex_remaining -= 1; 0},
-                '0'..='9' | 'a'..='f' | 'A'..='F' if escape && in_hex => { hex_remaining -= 1; escape = false; in_hex = false; 1},
+                '"' if !in_string => {
+                    in_string = true;
+                    0
+                }
+                '"' if escape => {
+                    escape = false;
+                    1
+                }
+                '"' if in_string => {
+                    in_string = false;
+                    0
+                }
+                _ if !in_string => {
+                    unreachable!()
+                }
+                '\\' if escape => {
+                    escape = false;
+                    1
+                }
+                '\\' => {
+                    escape = true;
+                    0
+                }
+                'x' if escape => {
+                    in_hex = true;
+                    hex_remaining = 2;
+                    0
+                }
+                '0'..='9' | 'a'..='f' | 'A'..='F' if escape && in_hex && hex_remaining > 1 => {
+                    hex_remaining -= 1;
+                    0
+                }
+                '0'..='9' | 'a'..='f' | 'A'..='F' if escape && in_hex => {
+                    hex_remaining -= 1;
+                    escape = false;
+                    in_hex = false;
+                    1
+                }
                 _ if escape => unreachable!("unexpected char {} in escape {}", c, s),
                 _ => 1,
             };
@@ -133,7 +160,11 @@ impl FromStr for Entry {
         let code = s.bytes().count();
         let memory = Self::memory(s);
         println!("{s}: {code} {memory}");
-        Ok(Self { code, memory, input: s.to_string() })
+        Ok(Self {
+            code,
+            memory,
+            input: s.to_string(),
+        })
     }
 }
 
