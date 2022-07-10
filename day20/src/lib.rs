@@ -1,5 +1,5 @@
 use anyhow::Result;
-use std::collections::HashSet;
+use std::collections::HashMap;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
@@ -41,7 +41,9 @@ impl Solution {
 
     pub fn analyse(&mut self) {
         self.answer_part1 = self.analyse_part1();
+        log::info!("part1: {:?}", self.answer_part1);
         self.answer_part2 = self.analyse_part2();
+        log::info!("part2: {:?}", self.answer_part2);
     }
 
     pub fn answer_part1(&self) -> Option<u64> {
@@ -59,58 +61,42 @@ impl Solution {
     }
 
     fn analyse_part1(&mut self) -> Option<u64> {
-        let mut target = self.target.unwrap();
-        let mut active = HashSet::new();
+        let mut houses = HashMap::new();
+        let target = self.target? / 10;
+        for i in 1..=target {
+            for j in (i..=target).step_by(i.try_into().unwrap()) {
+                *houses.entry(j).or_insert(0) += i * 10;
+            }
+        }
+        log::debug!("{houses:?}");
+        let mut i = 0;
         loop {
-            let mut top_elf = Self::analyse_part1_partial(target);
-            let top_elf = loop {
-                if !active.contains(&top_elf) {
-                    break top_elf;
-                }
-                top_elf += 1;
-            };
-            for elf in 1..=top_elf {
-                if top_elf % elf == 0 {
-                    active.insert(elf);
-                    if target >= elf * 10 {
-                        target -= elf * 10;
-                    }
+            if let Some(v) = houses.get(&i) {
+                if *v >= self.target? {
+                    break Some(i);
                 }
             }
-            if target <= 0 {
-                break;
-            }
-        };
-        log::info!("{active:?}");
-        log::info!("{}", active.iter().sum::<u64>());
-        let mut total = 0;
-        let mut elf = 1;
-        let top_elf = loop {
-            total += elf * 10;
-            log::debug!("{elf} {total}");
-            if total >= target {
-                break elf;
-            }
-            elf += 1;
-        };
-        log::debug!("top_elf: {top_elf}");
-        None
-    }
-
-    fn analyse_part1_partial(target: u64) -> u64 {
-        let mut total = 0;
-        let mut elf = 1;
-        loop {
-            total += elf * 10;
-            log::debug!("{elf} {total}");
-            if total >= target {
-                break elf;
-            }
-            elf += 1;
+            i += 1;
         }
     }
 
     fn analyse_part2(&mut self) -> Option<u64> {
-        None
+        let mut houses = HashMap::new();
+        let target = self.target? / 11;
+        for i in 1..=target {
+            for j in 1..=50 {
+                *houses.entry(j * i).or_insert(0) += i * 11;
+            }
+        }
+        log::debug!("{houses:?}");
+        let mut i = 0;
+        loop {
+            if let Some(v) = houses.get(&i) {
+                if *v >= self.target? {
+                    break Some(i);
+                }
+            }
+            i += 1;
+        }
     }
 }

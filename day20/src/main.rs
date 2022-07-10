@@ -7,7 +7,7 @@ use yansi::Paint;
 fn main() -> Result<()> {
     env_logger::Builder::from_env(Env::default().default_filter_or("info")).init();
 
-    let mut solution = load("input/day20.input.test")?;
+    let mut solution = load("input/day20.input")?;
     info!(
         "{}{}: {:?}",
         Paint::masked("🎄 "),
