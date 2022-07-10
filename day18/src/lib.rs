@@ -153,22 +153,6 @@ impl Solution {
         for y in 0..=self.maxy {
             for x in 0..=self.maxx {
                 let v = self.data2.entry((x, y)).or_insert('.');
-                if x == 0 && y == 0 {
-                    *v = '#';
-                    continue;
-                }
-                if x == 0 && y == self.maxy {
-                    *v = '#';
-                    continue;
-                }
-                if x == self.maxx && y == 0 {
-                    *v = '#';
-                    continue;
-                }
-                if x == self.maxx && y == self.maxy {
-                    *v = '#';
-                    continue;
-                }
                 let num = *neigh.get(&(x as i64, y as i64)).unwrap_or(&0);
                 let nv = match v {
                     '#' if (2..=3).contains(&num) => '#',
@@ -180,5 +164,6 @@ impl Solution {
                 *v = nv;
             }
         }
+        Self::corners_on(&mut self.data2, self.maxx, self.maxy);
     }
 }
