@@ -54,7 +54,9 @@ impl Solution {
 
     pub fn analyse(&mut self) {
         self.answer_part1 = self.analyse_part1();
+        log::info!("part1: {:?}", self.answer_part1);
         self.answer_part2 = self.analyse_part2();
+        log::info!("part2: {:?}", self.answer_part2);
     }
 
     pub fn answer_part1(&self) -> Option<u64> {
@@ -109,7 +111,7 @@ impl Solution {
     }
 
     fn analyse_part2(&mut self) -> Option<u64> {
-        None
+        //None
         /*
         for idx in 0..self.molecule.len() {
             for (source, target) in &self.replacements {
@@ -120,6 +122,7 @@ impl Solution {
         }
         self.analyse_part2_step(self.molecule.clone(), 0)
         */
+        self.analyse_part2_step(self.molecule.clone(), 0)
     }
 
     fn analyse_part2_step(&self, cur_molecule: String, num_changes: u64) -> Option<u64> {
@@ -127,44 +130,29 @@ impl Solution {
         if cur_molecule == "e" {
             return Some(num_changes);
         }
-        let mut best = None;
-        for idx in 0..cur_molecule.len() {
-            for (source, target) in &self.replacements {
-                //log::debug!("{} {} {}", idx, target.len(), cur_molecule.len());
-                if idx + target.len() <= cur_molecule.len()
-                    && target == &cur_molecule[idx..idx + target.len()]
-                {
-                    let new_cur_molecule = if idx + target.len() < cur_molecule.len() {
-                        format!(
-                            "{}{}{}",
-                            &cur_molecule[0..idx],
-                            source,
-                            &cur_molecule[idx + target.len()..]
-                        )
-                    } else {
-                        format!("{}{}", &cur_molecule[0..idx], source)
-                    };
-                    log::debug!(
-                        "p2 {} {}: {} X {} = {}",
-                        num_changes + 1,
-                        idx,
-                        cur_molecule,
-                        target,
-                        new_cur_molecule
-                    );
-                    if let Some(total_changes) =
-                        self.analyse_part2_step(new_cur_molecule, num_changes + 1)
-                    {
-                        best = match best {
-                            Some(b) if b > total_changes => Some(total_changes),
-                            None => Some(total_changes),
-                            _ => best,
-                        };
-                    }
+        if cur_molecule.len() <= 1 {
+            panic!();
+        }
+        let mut best_source: Option<&String> = None;
+        let mut best_target: Option<&String> = None;
+        for (source, target) in &self.replacements {
+            if let Some(b) = best_target {
+                if b.len() > target.len() {
+                    continue;
                 }
             }
+            if cur_molecule.contains(target) {
+                best_target = Some(target);
+                best_source = Some(source);
+            }
         }
-        best
+        match best_target {
+            Some(b) => {
+                let next_molecule = cur_molecule.replacen(b, best_source.unwrap(), 1);
+                self.analyse_part2_step(next_molecule, num_changes + 1)
+            }
+            None => panic!(),
+        }
     }
 }
 
