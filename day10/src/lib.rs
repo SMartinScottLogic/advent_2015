@@ -55,7 +55,7 @@ impl Solution {
             input = self.analyse_step(&input);
             log::debug!("{input}");
         }
-        Some(input.bytes().count() as i64)
+        Some(input.len() as i64)
     }
 
     fn analyse_part2(&self) -> Option<i64> {
@@ -65,7 +65,7 @@ impl Solution {
             input = self.analyse_step(&input);
             log::debug!("{input}");
         }
-        Some(input.bytes().count() as i64)
+        Some(input.len() as i64)
     }
 
     fn analyse_step(&self, input: &str) -> String {
