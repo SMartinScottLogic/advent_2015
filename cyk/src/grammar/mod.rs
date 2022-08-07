@@ -21,7 +21,7 @@ impl<T: Debug + Clone + Rule> Grammar<T> {
         self.rules.push(rule.clone());
     }
 
-    pub fn convert_to_cnf<F>(&self, start_symbol: &str, splitter: F) -> CNFGrammar
+    pub fn convert_to_cnf<F>(&self, _start_symbol: &str, splitter: F) -> CNFGrammar
     where
         F: Fn(&str) -> Vec<String>,
     {

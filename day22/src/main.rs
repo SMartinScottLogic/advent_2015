@@ -1,5 +1,5 @@
 use anyhow::Result;
-use cyk::load;
+use day22::load;
 use env_logger::Env;
 use log::{error, info};
 use yansi::Paint;
@@ -7,9 +7,7 @@ use yansi::Paint;
 fn main() -> Result<()> {
     env_logger::Builder::from_env(Env::default().default_filter_or("info")).init();
 
-    //let filename = "input/cyk.input";
-    let filename = "input/day19.input";
-    let mut solution = load(filename)?;
+    let mut solution = load("input/day22.input")?;
     info!(
         "{}{}: {:?}",
         Paint::masked("🎄 "),
