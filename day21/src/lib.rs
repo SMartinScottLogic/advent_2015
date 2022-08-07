@@ -143,7 +143,9 @@ impl Solution {
                             player.damage += e.damage;
                         };
                         log::info!("{cost}: {player:?} {weapon:?} {armour:?} {ring1:?} {ring2:?}");
-                        if (best_cost.is_none() || cost < best_cost.unwrap()) && Self::fight(player, self.boss) {
+                        if (best_cost.is_none() || cost < best_cost.unwrap())
+                            && Self::fight(player, self.boss)
+                        {
                             best_cost = Some(cost);
                         }
                     }
@@ -223,7 +225,9 @@ impl Solution {
                             player.damage += e.damage;
                         };
                         log::info!("{cost}: {player:?} {weapon:?} {armour:?} {ring1:?} {ring2:?}");
-                        if (best_cost.is_none() || cost > best_cost.unwrap()) && !Self::fight(player, self.boss) {
+                        if (best_cost.is_none() || cost > best_cost.unwrap())
+                            && !Self::fight(player, self.boss)
+                        {
                             best_cost = Some(cost);
                         }
                     }
@@ -254,7 +258,7 @@ impl Solution {
                 return false;
             }
             player.hit_points -= damage;
-        };
+        }
     }
 
     fn same(lhs: &Option<Equipment>, rhs: &Option<Equipment>) -> bool {

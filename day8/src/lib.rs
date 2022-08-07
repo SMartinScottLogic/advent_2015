@@ -157,7 +157,7 @@ impl FromStr for Entry {
     type Err = std::convert::Infallible;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let code = s.bytes().count();
+        let code = s.len();
         let memory = Self::memory(s);
         println!("{s}: {code} {memory}");
         Ok(Self {
