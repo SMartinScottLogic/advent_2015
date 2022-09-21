@@ -1,6 +1,5 @@
-use anyhow::{Result, Context};
+use anyhow::{Context, Result};
 use regex::Regex;
-use std::collections::HashSet;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 use std::str::FromStr;
@@ -68,9 +67,8 @@ impl Solution {
             code *= 252533;
             code %= 33554393;
             if r == 1 {
-                r = c+1;
+                r = c + 1;
                 c = 1;
-
             } else {
                 r -= 1;
                 c += 1;
@@ -89,8 +87,16 @@ impl FromStr for Solution {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let r = Regex::new(r".*row (?P<row>[0-9]+), column (?P<column>[0-9]+)\.")?;
         let captures = r.captures(s).context("context")?;
-        let row = captures.name("row").context("get capture <row>")?.as_str().parse()?;
-        let column = captures.name("column").context("get capture <column>")?.as_str().parse()?;
+        let row = captures
+            .name("row")
+            .context("get capture <row>")?
+            .as_str()
+            .parse()?;
+        let column = captures
+            .name("column")
+            .context("get capture <column>")?
+            .as_str()
+            .parse()?;
         Ok(Self {
             row,
             column,
