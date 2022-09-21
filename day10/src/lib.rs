@@ -1,4 +1,5 @@
 use anyhow::Result;
+use std::fmt::Write;
 
 pub fn init(input: &str) -> Result<Solution> {
     let mut solution = Solution::new();
@@ -82,7 +83,7 @@ impl Solution {
                     count += 1;
                 }
                 Some(lc) => {
-                    output.push_str(&format!("{count}{lc}"));
+                    write!(output, "{count}{lc}").unwrap();
                     last_char = Some(c);
                     count = 1;
                 }
@@ -93,7 +94,7 @@ impl Solution {
             }
         }
         if let Some(c) = last_char {
-            output.push_str(&format!("{count}{c}"));
+            write!(output, "{count}{c}").unwrap();
         }
         output
     }
