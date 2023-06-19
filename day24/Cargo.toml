@@ -30,7 +30,7 @@ utils = { path = "../utils" }
 
 # Helpful macros for working with enums and strings
 strum = { version = "0.24", features = ["derive"] }
-strum_macros = "0.24"
+strum_macros = "0.25"
 
 # Single assignment cells and lazy values.
 once_cell = "1.13.0"
